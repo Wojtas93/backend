@@ -1,0 +1,10 @@
+package pl.sdacademy.backend.guest;
+
+public class NoSuchGuestException extends Exception {
+    public NoSuchGuestException(String errorMessage, Throwable err) {
+        super(errorMessage, err);
+    }
+    public NoSuchGuestException(String errorMessage) {
+        super(errorMessage);
+    }
+}
