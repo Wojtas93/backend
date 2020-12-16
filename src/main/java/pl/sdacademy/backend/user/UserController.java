@@ -1,8 +1,6 @@
 package pl.sdacademy.backend.user;
 
 import org.springframework.web.bind.annotation.*;
-import pl.sdacademy.backend.guest.Guest;
-import pl.sdacademy.backend.guest.NoSuchGuestException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +22,15 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable Long id) {
-        return userRepository.findById(id).orElse(null);
+    public User findById(@PathVariable Long id) throws NoSuchUserException {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchUserException("User with ID: " + id + " not found."));
     }
 
     @GetMapping("/{userName}")
-    public User getByName(@PathVariable String userName) {
-        return userRepository.findByUsername(userName).orElse(null);
+    public User getByName(@PathVariable String userName) throws NoSuchUserException {
+        return userRepository.findByUsername(userName)
+                .orElseThrow(() -> new NoSuchUserException("User with name: " + userName + " not found."));
     }
 
     @PostMapping
@@ -50,12 +50,12 @@ public class UserController {
         User user = null;
         if (userOp.isPresent()) {
             user = userOp.get();
+
+            user.setUsername(sentUser.getUsername());
+            user.setPassword(sentUser.getPassword());
+            user.setRole(sentUser.getRole());
+            return userRepository.save(user);
         }
-
-        user.setUsername(sentUser.getUsername());
-        user.setPassword(sentUser.getPassword());
-        user.setRole(sentUser.getRole());
-        return userRepository.save(user);
+        return user;
     }
-
 }

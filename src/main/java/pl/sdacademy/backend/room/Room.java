@@ -1,7 +1,5 @@
 package pl.sdacademy.backend.room;
 
-import pl.sdacademy.backend.hotel.Hotel;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -12,8 +10,6 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     private String roomNr;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Hotel hotel;
     private boolean isCleaned;
     private int numPeople;  // np "3-person room"
     private BigDecimal price;  // a separate Entity would be better - so that price can depend on Date
@@ -23,9 +19,8 @@ public class Room {
     public Room() {
     }
 
-    public Room(String roomNr, Hotel hotel, boolean isCleaned, int numPeople, BigDecimal price) {
+    public Room(String roomNr,boolean isCleaned, int numPeople, BigDecimal price) {
         this.roomNr = roomNr;
-        this.hotel = hotel;
         this.isCleaned = isCleaned;
         this.numPeople = numPeople;
         this.price = price;
