@@ -14,7 +14,7 @@ import java.util.Objects;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserRepository userRepository;
+    private UserRepository  userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserRepository userRepository) {
