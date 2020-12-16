@@ -6,10 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @RestController
@@ -32,9 +30,7 @@ public class UserController {
         } catch (NoSuchElementException e) {
             LOGGER.info("Couldn't find this user");
             e.printStackTrace();
-            return new ResponseEntity(
-                    "Couldn't find this user",
-                    HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -45,9 +41,7 @@ public class UserController {
         } catch (NoSuchElementException e) {
             LOGGER.info("Couldn't find this user");
             e.printStackTrace();
-            return new ResponseEntity(
-                    "Couldn't find this user",
-                    HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -58,56 +52,51 @@ public class UserController {
         } catch (NoSuchElementException e) {
             LOGGER.info("Couldn't find this user");
             e.printStackTrace();
-            return new ResponseEntity(
-                    "Couldn't find this user",
-                    HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         }
     }
 
     @PostMapping("/post")
-    public ResponseEntity<String> create(@RequestBody User user) {
+    public ResponseEntity<TextResponse> create(@RequestBody User user) {
         try {
             userRepository.save(user);
-            return ResponseEntity.ok("User created");
+            return ResponseEntity.ok(new TextResponse("User created"));
         } catch (Exception e) {
             LOGGER.info("Couldn't create this user");
             e.printStackTrace();
-            return new ResponseEntity(
-                    "Couldn't create this user",
-                    HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't create this user"));
         }
     }
+
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<String> update(@RequestBody User userNew, @PathVariable long id) {
+    public ResponseEntity<TextResponse> update(@RequestBody User userNew, @PathVariable long id) {
         try {
             User user = userRepository.getOne(id);
             user.setUsername(userNew.getUsername());
             user.setPassword(userNew.getPassword());
             user.setRole(userNew.getRole());
             userRepository.save(user);
-            return ResponseEntity.ok("User updated");
+            return ResponseEntity.ok(new TextResponse("User updated"));
         } catch (NoSuchElementException e) {
             LOGGER.info("Couldn't update this user");
             e.printStackTrace();
-            return new ResponseEntity(
-                    "Couldn't update this user",
-                    HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't find this user"));
         }
 
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) {
+    public ResponseEntity<TextResponse> delete(@PathVariable long id) {
         try {
             userRepository.delete(userRepository.getOne(id));
             LOGGER.info("user deleted successful");
-            return ResponseEntity.ok("user deleted");
+            return ResponseEntity.ok(new TextResponse("user deleted"));
         } catch (Exception e) {
             LOGGER.info("Couldn't delete this user");
             e.printStackTrace();
-            return new ResponseEntity(
-                    "Couldn't deleted this user",
-                    HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't deleted this user"));
         }
     }
 
