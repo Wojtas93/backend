@@ -1,6 +1,8 @@
 package pl.sdacademy.backend.guest;
 
-public class NoSuchGuestException extends Exception {
+import java.util.NoSuchElementException;
+
+public class NoSuchGuestException extends NoSuchElementException {
     public NoSuchGuestException(String errorMessage, Throwable err) {
         super(errorMessage, err);
     } // potrzebne?

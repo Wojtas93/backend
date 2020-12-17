@@ -1,6 +1,8 @@
 package pl.sdacademy.backend.reservation;
 
-public class NoSuchReservationException extends Exception {
+import java.util.NoSuchElementException;
+
+public class NoSuchReservationException extends NoSuchElementException {
     public NoSuchReservationException(String errorMessage, Throwable err) {
         super(errorMessage, err);
     } // potrzebne?

@@ -1,38 +1,98 @@
 package pl.sdacademy.backend.guest;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pl.sdacademy.backend.TextRespone.TextResponse;
+import pl.sdacademy.backend.room.NoSuchRoomException;
+import pl.sdacademy.backend.room.Room;
+import pl.sdacademy.backend.room.RoomController;
+import pl.sdacademy.backend.room.RoomResponseDto;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
 public class GuestController {
-    GuestRepository guestRepository;
+    
+    private GuestRepository guestRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GuestController.class);
 
     public GuestController(GuestRepository guestRepository) {
         this.guestRepository = guestRepository;
     }
-
-    @GetMapping("/guest")
-    public List<Guest> findAll() {
-        return guestRepository.findAll();
+    @GetMapping
+    public ResponseEntity<GuestResponseDto> get() throws NoSuchGuestException {
+        try{
+            return ResponseEntity.ok(new GuestResponseDto(guestRepository.findAll()));
+        }catch (NoSuchGuestException e){
+            LOGGER.info("DB is empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new GuestResponseDto(Collections.emptyList()));
+        }
     }
 
-    @GetMapping("/guest/{id}")
-    public Guest findById(@PathVariable Long id) throws NoSuchGuestException {
-        return guestRepository.findById(id).orElseThrow(() -> new NoSuchGuestException("No Guest was found with ID: " + id));
+    @GetMapping("/{id}")
+    public ResponseEntity<Guest> get(@PathVariable Long id) throws NoSuchGuestException {
+        try{
+            return ResponseEntity.ok(guestRepository.getOne(id));
+        }catch (NoSuchGuestException e){
+            LOGGER.info("Couldn't find this guest, check id");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
-    @GetMapping("/guest/by-name/{firstName}+{lastName}")
-    public Guest getByFirstAndLastName(@PathVariable String firstName,@PathVariable String lastName) throws NoSuchGuestException {
-        return guestRepository.findByFirstNameAndLastName(firstName, lastName)
-                .orElseThrow(() -> new NoSuchGuestException("No Guest was found with firstName: " + firstName
-                        + " and lastName: " + lastName));
+    @GetMapping("/{guestLastName}")
+    public ResponseEntity<Guest> get(@PathVariable String guestLastName) throws NoSuchGuestException {
+        try{
+            return ResponseEntity.ok(guestRepository.findByLastName(guestLastName).get());
+        }catch (NoSuchGuestException e){
+            LOGGER.info("Couldn't find this guest, check guest Number");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @GetMapping("/{guestFirstName}/{guestLastName}")
+    public ResponseEntity<Guest> get(@PathVariable String guestFirstName,@PathVariable String guestLastName) throws NoSuchGuestException {
+        try{
+            return ResponseEntity.ok(guestRepository.findByFirstNameAndLastName(guestFirstName,guestLastName).get());
+        }catch (NoSuchGuestException e){
+            LOGGER.info("Couldn't find this guest, check guest Number");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @PutMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<TextResponse> update(@RequestBody Guest guestNew, @PathVariable long id) throws NoSuchGuestException{
+        try {
+            Guest guest = guestRepository.getOne(id);
+            guest.setFirstName(guestNew.getFirstName());
+            guest.setLastName(guestNew.getLastName());
+            guestRepository.save(guest);
+            return ResponseEntity.ok(new TextResponse("Guest updated"));
+        } catch (NoSuchGuestException e) {
+            LOGGER.info("Couldn't update this guest");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't find this guest"));
+        }
+
     }
 
-    //public List<Room> getAvailableRoomsByDates(LocalDate startDate, LocalDate endDate)
-
-    //public List<Room> getReservedRoomsByDates(LocalDate startDate, LocalDate endDate)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TextResponse> delete(@PathVariable long id) throws NoSuchGuestException{
+        try {
+            guestRepository.delete(guestRepository.getOne(id));
+            LOGGER.info("guest deleted successful");
+            return ResponseEntity.ok(new TextResponse("guest deleted"));
+        } catch (NoSuchGuestException e) {
+            LOGGER.info("Couldn't delete this guest");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't deleted this guest"));
+        }
+    }
 
 }
