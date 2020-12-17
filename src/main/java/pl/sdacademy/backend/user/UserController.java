@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.sdacademy.backend.TextRespone.TextResponse;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -22,23 +23,23 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponseDto> get() {
+    public ResponseEntity<UserResponseDto> get() throws NoSuchUserException{
         try {
             UserResponseDto userResponseDto = new UserResponseDto();
             userResponseDto.setUsers(userRepository.findAll());
             return ResponseEntity.ok(userResponseDto);
-        } catch (NoSuchElementException e) {
-            LOGGER.info("Couldn't find this user");
+        } catch (NoSuchUserException e) {
+            LOGGER.info("DB is empty");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable long id) {
+    public ResponseEntity<User> get(@PathVariable long id) throws NoSuchUserException{
         try {
             return ResponseEntity.ok(userRepository.getOne(id));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't find this user");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -46,10 +47,10 @@ public class UserController {
     }
 
     @GetMapping("/{userName}")
-    public ResponseEntity<User> get(@PathVariable String userName) {
+    public ResponseEntity<User> get(@PathVariable String userName) throws NoSuchUserException{
         try {
             return ResponseEntity.ok(Objects.requireNonNull(userRepository.findByUsername(userName).get()));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't find this user");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -58,11 +59,11 @@ public class UserController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<TextResponse> create(@RequestBody User user) {
+    public ResponseEntity<TextResponse> create(@RequestBody User user) throws NoSuchUserException{
         try {
             userRepository.save(user);
             return ResponseEntity.ok(new TextResponse("User created"));
-        } catch (Exception e) {
+        } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't create this user");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't create this user"));
@@ -71,7 +72,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<TextResponse> update(@RequestBody User userNew, @PathVariable long id) {
+    public ResponseEntity<TextResponse> update(@RequestBody User userNew, @PathVariable long id) throws NoSuchUserException{
         try {
             User user = userRepository.getOne(id);
             user.setUsername(userNew.getUsername());
@@ -79,7 +80,7 @@ public class UserController {
             user.setRole(userNew.getRole());
             userRepository.save(user);
             return ResponseEntity.ok(new TextResponse("User updated"));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't update this user");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't find this user"));
@@ -88,12 +89,12 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TextResponse> delete(@PathVariable long id) {
+    public ResponseEntity<TextResponse> delete(@PathVariable long id) throws NoSuchUserException{
         try {
             userRepository.delete(userRepository.getOne(id));
             LOGGER.info("user deleted successful");
             return ResponseEntity.ok(new TextResponse("user deleted"));
-        } catch (Exception e) {
+        } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't delete this user");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't deleted this user"));

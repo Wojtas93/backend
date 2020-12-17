@@ -1,4 +1,4 @@
-package pl.sdacademy.backend.user;
+package pl.sdacademy.backend.TextRespone;
 
 
 public class TextResponse {

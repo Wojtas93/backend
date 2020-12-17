@@ -1,6 +1,8 @@
 package pl.sdacademy.backend.room;
 
-public class NoSuchRoomException extends Exception {
+import java.util.NoSuchElementException;
+
+public class NoSuchRoomException extends NoSuchElementException {
     public NoSuchRoomException(String errorMessage, Throwable err) {
         super(errorMessage, err);
     } // potrzebne?

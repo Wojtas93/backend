@@ -1,6 +1,8 @@
 package pl.sdacademy.backend.user;
 
-public class NoSuchUserException extends Exception{
+import java.util.NoSuchElementException;
+
+public class NoSuchUserException extends NoSuchElementException {
     public NoSuchUserException(String errorMessage, Throwable err) {
         super(errorMessage, err);
     } // potrzebne?
