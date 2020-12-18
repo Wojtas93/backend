@@ -1,13 +1,17 @@
 package pl.sdacademy.backend.reservation;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
 import pl.sdacademy.backend.room.Room;
 import pl.sdacademy.backend.room.RoomController;
 
+import java.util.List;
+
 @RestController
+@ResponseStatus(HttpStatus.OK)
 public class ReservationController {
-    private ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
     private RoomController roomController;
 
     public ReservationController(ReservationRepository reservationRepository) {
@@ -19,6 +23,11 @@ public class ReservationController {
         return new ReservationResponseDto(reservationRepository.findAll());
     }
 
+    @GetMapping("/admin")
+    public List<Reservation> getAdmin() {
+        return reservationRepository.findAll();
+    }
+
     @GetMapping("/{id}")
     public Reservation get(@PathVariable Long id) {
         return reservationRepository.findById(id).get();
@@ -26,14 +35,14 @@ public class ReservationController {
 
     @GetMapping("/roomNr/{roomNr}")
     public Reservation get(@PathVariable String roomNr) {
-        Room room = roomController.get(roomNr).getBody();
+        Room room = roomController.get(roomNr);
         return reservationRepository.findByRoom(room).get();
 
     }
 
     @GetMapping("/roomId/{roomId}")
     public Reservation get(@PathVariable long roomId) {
-        Room room = roomController.get(roomId).getBody();
+        Room room = roomController.get(roomId);
         return reservationRepository.findByRoom(room).get();
     }
 

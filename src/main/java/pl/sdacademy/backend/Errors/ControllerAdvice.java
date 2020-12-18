@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.sdacademy.backend.reservation.NoSuchReservationException;
+import pl.sdacademy.backend.room.NoSuchRoomException;
+import pl.sdacademy.backend.user.NoSuchUserException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,8 +40,22 @@ public class ControllerAdvice {
     @ExceptionHandler(NoSuchReservationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseMessage handle(NoSuchReservationException e) {
-        LOGGER.info("Couldn't find this reservation, check reservation Number");
+        LOGGER.info("Couldn't find this reservation, check reservation number");
         return new ResponseMessage("Couldn't find this reservation, check reservation Number");
+    }
+
+    @ExceptionHandler(NoSuchUserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseMessage handle(NoSuchUserException e) {
+        LOGGER.info("Couldn't find this user, check user id and name");
+        return new ResponseMessage("Couldn't find this user, check user id and name");
+    }
+
+    @ExceptionHandler(NoSuchRoomException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseMessage handle(NoSuchRoomException e) {
+        LOGGER.info("Couldn't find this room, check room number and id");
+        return new ResponseMessage("Couldn't find this room, check room number and id");
     }
 
     @ExceptionHandler(Exception.class)
