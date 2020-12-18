@@ -1,14 +1,14 @@
-package pl.sdacademy.backend.TextRespone;
+package pl.sdacademy.backend.Errors;
 
 
-public class TextResponse {
+public class ResponseMessage {
     private String string;
 
-    public TextResponse(String string) {
+    public ResponseMessage(String string) {
         this.string = string;
     }
 
-    public TextResponse() {
+    public ResponseMessage() {
     }
 
     public String getString() {

@@ -1,6 +1,5 @@
 package pl.sdacademy.backend.reservation;
 
-import pl.sdacademy.backend.guest.Guest;
 
 import java.util.List;
 

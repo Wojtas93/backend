@@ -5,13 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.sdacademy.backend.TextRespone.TextResponse;
-import pl.sdacademy.backend.user.User;
-import pl.sdacademy.backend.user.UserController;
+import pl.sdacademy.backend.Errors.ResponseMessage;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/room")
@@ -58,7 +54,7 @@ public class RoomController {
     }
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<TextResponse> update(@RequestBody Room roomNew, @PathVariable long id) throws NoSuchRoomException{
+    public ResponseEntity<ResponseMessage> update(@RequestBody Room roomNew, @PathVariable long id) throws NoSuchRoomException{
         try {
             Room room = roomRepository.getOne(id);
             room.setRoomNr(roomNew.getRoomNr());
@@ -66,25 +62,25 @@ public class RoomController {
             room.setNumPeople(roomNew.getNumPeople());
             room.setPrice(roomNew.getPrice());
             roomRepository.save(room);
-            return ResponseEntity.ok(new TextResponse("Room updated"));
+            return ResponseEntity.ok(new ResponseMessage("Room updated"));
         } catch (NoSuchRoomException e) {
             LOGGER.info("Couldn't update this room");
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't find this room"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Couldn't find this room"));
         }
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TextResponse> delete(@PathVariable long id) throws NoSuchRoomException{
+    public ResponseEntity<ResponseMessage> delete(@PathVariable long id) throws NoSuchRoomException{
         try {
             roomRepository.delete(roomRepository.getOne(id));
             LOGGER.info("room deleted successful");
-            return ResponseEntity.ok(new TextResponse("room deleted"));
+            return ResponseEntity.ok(new ResponseMessage("room deleted"));
         } catch (NoSuchRoomException e) {
             LOGGER.info("Couldn't delete this room");
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't deleted this room"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Couldn't deleted this room"));
         }
     }
 }

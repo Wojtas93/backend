@@ -1,13 +1,10 @@
 package pl.sdacademy.backend.reservation;
 
-import pl.sdacademy.backend.guest.Guest;
 import pl.sdacademy.backend.room.Room;
-import pl.sdacademy.backend.room.RoomRepository;
+import pl.sdacademy.backend.user.User;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,7 +15,7 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.EAGER)
     private Room room;
     @ManyToOne(fetch = FetchType.EAGER)
-    private Guest guest;
+    private User user;
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isPaid;
@@ -27,9 +24,9 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Room room, Guest guest, LocalDate startDate, LocalDate endDate, Boolean isPaid) {
+    public Reservation(Room room, User user, LocalDate startDate, LocalDate endDate, Boolean isPaid) {
         this.room = room;
-        this.guest = guest;
+        this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isPaid = isPaid;
@@ -51,12 +48,12 @@ public class Reservation {
         this.room = room;
     }
 
-    public Guest getGuest() {
-        return guest;
+    public User getUser() {
+        return user;
     }
 
-    public void setGuest(Guest guest) {
-        this.guest = guest;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDate getStartDate() {
@@ -88,12 +85,12 @@ public class Reservation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
-        return Objects.equals(Id, that.Id) && Objects.equals(room, that.room) && Objects.equals(guest, that.guest) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(isPaid, that.isPaid);
+        return Objects.equals(Id, that.Id) && Objects.equals(room, that.room) && Objects.equals(user, that.user) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(isPaid, that.isPaid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id, room, guest, startDate, endDate, isPaid);
+        return Objects.hash(Id, room, user, startDate, endDate, isPaid);
     }
 
     @Override
@@ -101,7 +98,7 @@ public class Reservation {
         return "Reservation{" +
                 "Id=" + Id +
                 ", room=" + room +
-                ", guest=" + guest +
+                ", guest=" + user +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", isPaid=" + isPaid +

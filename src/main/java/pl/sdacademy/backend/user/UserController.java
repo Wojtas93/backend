@@ -5,9 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.sdacademy.backend.TextRespone.TextResponse;
+import pl.sdacademy.backend.Errors.ResponseMessage;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 
@@ -15,7 +14,7 @@ import java.util.Objects;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserRepository  userRepository;
+    private UserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserRepository userRepository) {
@@ -23,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponseDto> get() throws NoSuchUserException{
+    public ResponseEntity<UserResponseDto> get() throws NoSuchUserException {
         try {
             UserResponseDto userResponseDto = new UserResponseDto();
             userResponseDto.setUsers(userRepository.findAll());
@@ -36,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable long id) throws NoSuchUserException{
+    public ResponseEntity<User> get(@PathVariable long id) throws NoSuchUserException {
         try {
             return ResponseEntity.ok(userRepository.getOne(id));
         } catch (NoSuchUserException e) {
@@ -47,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{userName}")
-    public ResponseEntity<User> get(@PathVariable String userName) throws NoSuchUserException{
+    public ResponseEntity<User> getByLogin(@PathVariable String userName) throws NoSuchUserException {
         try {
             return ResponseEntity.ok(Objects.requireNonNull(userRepository.findByUsername(userName).get()));
         } catch (NoSuchUserException e) {
@@ -58,46 +57,70 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{userLastName}")
+    public ResponseEntity<User> get(@PathVariable String userLastName) throws NoSuchUserException {
+        try {
+            return ResponseEntity.ok(userRepository.findByLastName(userLastName).get());
+        } catch (NoSuchUserException e) {
+            LOGGER.info("Couldn't find this guest, check guest Number");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/{userFirstName}/{userLastName}")
+    public ResponseEntity<User> get(@PathVariable String userFirstName, @PathVariable String userLastName) throws NoSuchUserException {
+        try {
+            return ResponseEntity.ok(userRepository.findByFirstNameAndLastName(userFirstName, userLastName).get());
+        } catch (NoSuchUserException e) {
+            LOGGER.info("Couldn't find this guest, check guest Number");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
     @PostMapping("/post")
-    public ResponseEntity<TextResponse> create(@RequestBody User user) throws NoSuchUserException{
+    public ResponseEntity<ResponseMessage> create(@RequestBody User user) throws NoSuchUserException {
         try {
             userRepository.save(user);
-            return ResponseEntity.ok(new TextResponse("User created"));
+            return ResponseEntity.ok(new ResponseMessage("User created"));
         } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't create this user");
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't create this user"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Couldn't create this user"));
         }
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<TextResponse> update(@RequestBody User userNew, @PathVariable long id) throws NoSuchUserException{
+    public ResponseEntity<ResponseMessage> update(@RequestBody User userNew, @PathVariable long id) throws NoSuchUserException {
         try {
             User user = userRepository.getOne(id);
             user.setUsername(userNew.getUsername());
             user.setPassword(userNew.getPassword());
             user.setRole(userNew.getRole());
+            user.setFirstName(userNew.getFirstName());
+            user.setLastName(user.getLastName());
             userRepository.save(user);
-            return ResponseEntity.ok(new TextResponse("User updated"));
+            return ResponseEntity.ok(new ResponseMessage("User updated"));
         } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't update this user");
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't find this user"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Couldn't find this user"));
         }
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TextResponse> delete(@PathVariable long id) throws NoSuchUserException{
+    public ResponseEntity<ResponseMessage> delete(@PathVariable long id) throws NoSuchUserException {
         try {
             userRepository.delete(userRepository.getOne(id));
             LOGGER.info("user deleted successful");
-            return ResponseEntity.ok(new TextResponse("user deleted"));
+            return ResponseEntity.ok(new ResponseMessage("user deleted"));
         } catch (NoSuchUserException e) {
             LOGGER.info("Couldn't delete this user");
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new TextResponse("Couldn't deleted this user"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Couldn't deleted this user"));
         }
     }
 

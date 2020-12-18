@@ -2,8 +2,6 @@ package pl.sdacademy.backend;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.sdacademy.backend.guest.Guest;
-import pl.sdacademy.backend.guest.GuestRepository;
 import pl.sdacademy.backend.reservation.Reservation;
 import pl.sdacademy.backend.reservation.ReservationRepository;
 import pl.sdacademy.backend.room.Room;
@@ -21,15 +19,13 @@ public class DbInit {
     private PasswordEncoder passwordEncoder;
     private RoomRepository roomRepository;
     private ReservationRepository reservationRepository;
-    private GuestRepository guestRepository;
 
-    public DbInit(UserRepository userRepository, PasswordEncoder passwordEncoder, RoomRepository roomRepository, ReservationRepository reservationRepository, GuestRepository guestRepository) {
+    public DbInit(UserRepository userRepository, PasswordEncoder passwordEncoder, RoomRepository roomRepository, ReservationRepository reservationRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
 
         this.roomRepository = roomRepository;
         this.reservationRepository = reservationRepository;
-        this.guestRepository = guestRepository;
     }
 
     @PostConstruct
@@ -37,20 +33,20 @@ public class DbInit {
         User user1 = new User(
                 "user1",
                 passwordEncoder.encode("pass1"),
-                "USER"
-        );
+                "USER",
+                "firstName", "lastName");
         userRepository.save(user1);
         User user2 = new User(
                 "user2",
                 passwordEncoder.encode("pass2"),
-                "USER"
-        );
+                "USER",
+                "firstName", "lastName");
         userRepository.save(user2);
         User user3 = new User(
                 "user3",
                 passwordEncoder.encode("pass3"),
-                "ADMIN"
-        );
+                "ADMIN",
+                "firstName", "lastName");
         userRepository.save(user3);
 
         Room room1 = new Room("101", true, 2, BigDecimal.valueOf(150.00));
@@ -58,20 +54,15 @@ public class DbInit {
         Room room2 = new Room("102", false, 4, BigDecimal.valueOf(252.50));
         roomRepository.save(room2);
 
-        Guest guest1 = new Guest("Pawel", "Buczek");
-        guestRepository.save(guest1);
-        Guest guest2 = new Guest("Wojciech", "Bassara");
-        guestRepository.save(guest2);
-
         Reservation reservation1 = new Reservation(room1,
-                guest1,
+                user1,
                 LocalDate.of(2020, 12, 10),
                 LocalDate.of(2020, 12, 10),
                 false);
         reservationRepository.save(reservation1);
 
         Reservation reservation2 = new Reservation(room2,
-                guest2,
+                user2,
                 LocalDate.of(2020, 12, 25),
                 LocalDate.of(2020, 12, 31),
                 true);
