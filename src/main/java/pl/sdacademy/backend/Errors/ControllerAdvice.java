@@ -12,6 +12,7 @@ import pl.sdacademy.backend.reservation.NoSuchReservationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RestControllerAdvice
 public class ControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdvice.class);

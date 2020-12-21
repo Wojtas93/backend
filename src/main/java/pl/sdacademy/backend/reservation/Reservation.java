@@ -1,10 +1,17 @@
 package pl.sdacademy.backend.reservation;
 
+
+import org.springframework.format.annotation.DateTimeFormat;
 import pl.sdacademy.backend.room.Room;
 import pl.sdacademy.backend.user.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
@@ -16,10 +23,17 @@ public class Reservation {
     private Room room;
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Boolean isPaid;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Future
+    private ZonedDateTime startDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Future
+    private ZonedDateTime endDate;
+
+    @NotNull
+    private Boolean isPaid;
 
     public Reservation() {
     }
@@ -27,8 +41,8 @@ public class Reservation {
     public Reservation(Room room, User user, LocalDate startDate, LocalDate endDate, Boolean isPaid) {
         this.room = room;
         this.user = user;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = startDate.atStartOfDay(ZoneId.systemDefault());
+        this.endDate = endDate.atStartOfDay(ZoneId.systemDefault());
         this.isPaid = isPaid;
     }
 
@@ -57,19 +71,19 @@ public class Reservation {
     }
 
     public LocalDate getStartDate() {
-        return startDate;
+        return startDate.toLocalDate();
     }
 
     public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+        this.startDate = startDate.atStartOfDay(ZoneId.systemDefault());
     }
 
     public LocalDate getEndDate() {
-        return endDate;
+        return endDate.toLocalDate();
     }
 
     public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+        this.endDate = endDate.atStartOfDay(ZoneId.systemDefault());
     }
 
     public Boolean getPaid() {

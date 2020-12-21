@@ -32,21 +32,21 @@ public class DbInit {
     public void onInit() {
         User user1 = new User(
                 "user1",
-                passwordEncoder.encode("pass1"),
-                "USER",
-                "firstName", "lastName");
+                passwordEncoder.encode("Password1"),
+                "user1@example.pl", "USER",
+                "firstName", "lastName", null);
         userRepository.save(user1);
         User user2 = new User(
                 "user2",
-                passwordEncoder.encode("pass2"),
-                "USER",
-                "firstName", "lastName");
+                passwordEncoder.encode("Password2"),
+                "user2@example.pl", "USER",
+                "firstName", "lastName", "4929486472865824");
         userRepository.save(user2);
         User user3 = new User(
                 "user3",
-                passwordEncoder.encode("pass3"),
-                "ADMIN",
-                "firstName", "lastName");
+                passwordEncoder.encode("Password3"),
+                "user3@example.pl", "ADMIN",
+                "firstName", "lastName", "5260982372346117");
         userRepository.save(user3);
 
         Room room1 = new Room("101", true, 2, BigDecimal.valueOf(150.00));
@@ -56,15 +56,15 @@ public class DbInit {
 
         Reservation reservation1 = new Reservation(room1,
                 user1,
-                LocalDate.of(2020, 12, 10),
-                LocalDate.of(2020, 12, 10),
+                LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(5),
                 false);
         reservationRepository.save(reservation1);
 
         Reservation reservation2 = new Reservation(room2,
                 user2,
-                LocalDate.of(2020, 12, 25),
-                LocalDate.of(2020, 12, 31),
+                LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(15),
                 true);
         reservationRepository.save(reservation2);
     }

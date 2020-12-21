@@ -1,6 +1,8 @@
 package pl.sdacademy.backend.room;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -9,9 +11,14 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+    @NotEmpty
+    @Column(unique = true)
     private String roomNr;
+    @NotNull
     private boolean isCleaned;
+    @NotNull
     private int numPeople;  // np "3-person room"
+    @NotNull
     private BigDecimal price;  // a separate Entity would be better - so that price can depend on Date
     // could be more but that's not the point I think
 
