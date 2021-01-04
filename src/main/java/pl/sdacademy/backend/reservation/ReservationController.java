@@ -6,6 +6,7 @@ import pl.sdacademy.backend.room.Room;
 import pl.sdacademy.backend.room.RoomController;
 
 @RestController
+@RequestMapping("/reservation")
 public class ReservationController {
     private ReservationRepository reservationRepository;
     private RoomController roomController;
