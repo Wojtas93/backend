@@ -9,6 +9,7 @@ import pl.sdacademy.backend.room.RoomController;
 import java.util.List;
 
 @RestController
+@RequestMapping("/reservation")
 @ResponseStatus(HttpStatus.OK)
 public class ReservationController {
     private final ReservationRepository reservationRepository;
@@ -35,14 +36,14 @@ public class ReservationController {
 
     @GetMapping("/roomNr/{roomNr}")
     public Reservation get(@PathVariable String roomNr) {
-        Room room = roomController.get(roomNr);
+        Room room = roomController.get(roomNr).getBody();
         return reservationRepository.findByRoom(room).get();
 
     }
 
     @GetMapping("/roomId/{roomId}")
     public Reservation get(@PathVariable long roomId) {
-        Room room = roomController.get(roomId);
+        Room room = roomController.get(roomId).getBody();
         return reservationRepository.findByRoom(room).get();
     }
 
