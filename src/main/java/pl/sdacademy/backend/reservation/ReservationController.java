@@ -36,14 +36,14 @@ public class ReservationController {
 
     @GetMapping("/roomNr/{roomNr}")
     public Reservation get(@PathVariable String roomNr) {
-        Room room = roomController.get(roomNr).getBody();
+        Room room = roomController.get(roomNr);
         return reservationRepository.findByRoom(room).get();
 
     }
 
     @GetMapping("/roomId/{roomId}")
     public Reservation get(@PathVariable long roomId) {
-        Room room = roomController.get(roomId).getBody();
+        Room room = roomController.get(roomId);
         return reservationRepository.findByRoom(room).get();
     }
 
