@@ -7,6 +7,9 @@ public class ReservationResponseDto {
     private List<Reservation> reservations;
 
     public ReservationResponseDto(List<Reservation> reservations) {
+        reservations.stream()
+                .map(Reservation::getUser)
+                .forEach(user -> user.setPassword("*****"));
         this.reservations = reservations;
     }
 
