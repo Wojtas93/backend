@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @ResponseStatus(HttpStatus.OK)
+@RequestMapping("/reservation")
 public class ReservationController {
     private final ReservationRepository reservationRepository;
     private RoomController roomController;
