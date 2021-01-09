@@ -1,11 +1,9 @@
 package pl.sdacademy.backend.user;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserResponseDto {
-    private List<User> users = new ArrayList<>();
-
+    private List<User> users;
 
     public UserResponseDto(List<User> users) {
         users.forEach(user ->user.setPassword("******"));
