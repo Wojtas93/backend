@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
 import pl.sdacademy.backend.room.Room;
 import pl.sdacademy.backend.room.RoomController;
+import pl.sdacademy.backend.user.User;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,7 +58,11 @@ public class ReservationController {
             return new ReservationResponseDto(reservationRepository.findByUser_LastNameOrderByStartDate(userLastName));
         }
     }
-
+    @PostMapping("/post")
+    public ResponseMessage create(@RequestBody Reservation reservation) {
+        reservationRepository.save(reservation);
+        return new ResponseMessage("User created");
+    }
     @PutMapping("/{id}")
     @ResponseBody
     public ResponseMessage update(@RequestBody Reservation reservationNew, @PathVariable long id) {

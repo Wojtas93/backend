@@ -3,6 +3,7 @@ package pl.sdacademy.backend.room;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
+import pl.sdacademy.backend.user.User;
 
 import javax.validation.Valid;
 
@@ -32,7 +33,12 @@ public class RoomController {
     public Room get(@PathVariable String roomNr) {
         return roomRepository.findByRoomNr(roomNr).get();
     }
-
+    
+    @PostMapping("/post")
+    public ResponseMessage create(@RequestBody Room room) {
+        roomRepository.save(room);
+        return new ResponseMessage("Room created");
+    }
     @PutMapping("/{id}")
     @ResponseBody
     public ResponseMessage update(@RequestBody Room roomNew, @PathVariable long id) {
