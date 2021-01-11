@@ -6,11 +6,13 @@ import pl.sdacademy.backend.Errors.ResponseMessage;
 import pl.sdacademy.backend.room.Room;
 import pl.sdacademy.backend.room.RoomController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/reservation")
 @ResponseStatus(HttpStatus.OK)
+@Valid
 public class ReservationController {
     private final ReservationRepository reservationRepository;
     private RoomController roomController;

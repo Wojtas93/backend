@@ -4,9 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/room")
 @ResponseStatus(HttpStatus.OK)
+@Valid
 public class RoomController {
 
     private final RoomRepository roomRepository;

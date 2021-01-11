@@ -4,12 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/user")
 @ResponseStatus(HttpStatus.OK)
+@Valid
 public class UserController {
 
     private final UserRepository userRepository;

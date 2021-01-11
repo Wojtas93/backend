@@ -1,9 +1,6 @@
 package pl.sdacademy.backend.user;
 
-import net.bytebuddy.asm.Advice;
 import org.hibernate.validator.constraints.CreditCardNumber;
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
