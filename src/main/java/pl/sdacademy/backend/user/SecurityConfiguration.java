@@ -18,10 +18,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityConfiguration(UserService userService) {
         this.userService = userService;
     }
-
+//heroku
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic()
+        http
+                .csrf()
+                .disable()
+                .cors()
+                .and()
+                .httpBasic()
                 .and()
                 .authorizeRequests()
 ////                .antMatchers("/admin/**")
