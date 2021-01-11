@@ -20,6 +20,7 @@ public class BackendApplication {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/greeting-javaconfig").allowedOrigins(
                         "http://localhost:8080",
+                        "http://localhost:5555",
                         "http://localhost:4200");
             }
         };
