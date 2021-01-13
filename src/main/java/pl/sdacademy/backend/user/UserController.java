@@ -2,17 +2,15 @@ package pl.sdacademy.backend.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
-
-import javax.validation.Valid;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/user")
 @ResponseStatus(HttpStatus.OK)
-@Valid
 public class UserController {
 
     private final UserRepository userRepository;
@@ -54,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping("/post")
-    public ResponseMessage create(@RequestBody User user) {
+    public ResponseMessage create(@Validated @RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return new ResponseMessage("User created");

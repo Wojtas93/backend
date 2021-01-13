@@ -12,7 +12,8 @@ import pl.sdacademy.backend.reservation.NoSuchReservationException;
 import pl.sdacademy.backend.room.NoSuchRoomException;
 import pl.sdacademy.backend.user.NoSuchUserException;
 
-import java.util.List;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,11 +27,7 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Set<String>> handle(MethodArgumentNotValidException e) {
-        LOGGER.info(e.getFieldErrors()
-                .stream()
-                .map(fieldError -> new ResponseMessage(fieldError.getField() + ": " + fieldError.getDefaultMessage()))
-                .toString());
-
+        LOGGER.info(e.getMessage());
         return e.getFieldErrors()
                 .stream()
                 .collect(Collectors.groupingBy(
@@ -64,6 +61,15 @@ public class ControllerAdvice {
     public ResponseMessage handle(NoSuchRoomException e) {
         LOGGER.info("Couldn't find this room, check room number and id");
         return new ResponseMessage("Couldn't find this room, check room number and id");
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Set<String>> handle(ConstraintViolationException e) {
+        LOGGER.info(e.getMessage());
+        return e.getConstraintViolations().stream()
+                .collect(Collectors.groupingBy(ConstraintViolation::getMessage,
+                        Collectors.mapping(ConstraintViolation::getMessage, Collectors.toSet())));
     }
 
     @ExceptionHandler(Exception.class)
