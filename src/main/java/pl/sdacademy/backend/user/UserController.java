@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
+
 import java.util.List;
 
 
@@ -36,20 +37,20 @@ public class UserController {
         return userRepository.findById(id).get();
     }
 
-    @GetMapping("/{userName}")
-    public User getByLogin(@PathVariable String userName) {
-        return userRepository.findByUsername(userName).get();
+    @GetMapping("/{userName}/{password}")
+    public User get(@PathVariable String userName, @PathVariable String password) {
+        return userRepository.findByUsernameAndPassword(userName, passwordEncoder.encode(password)).get();
     }
 
-    @GetMapping("/{userLastName}")
-    public User get(@PathVariable String userLastName) {
-        return userRepository.findByLastName(userLastName).get();
-    }
-
-    @GetMapping("/{userFirstName}/{userLastName}")
-    public User get(@PathVariable String userFirstName, @PathVariable String userLastName) {
-        return userRepository.findByFirstNameAndLastName(userFirstName, userLastName).get();
-    }
+//    @GetMapping("/{userLastName}")
+//    public User get(@PathVariable String userLastName) {
+//        return userRepository.findByLastName(userLastName).get();
+//    }
+//
+//    @GetMapping("/{userFirstName}/{userLastName}")
+//    public User get(@PathVariable String userFirstName, @PathVariable String userLastName) {
+//        return userRepository.findByFirstNameAndLastName(userFirstName, userLastName).get();
+//    }
 
     @PostMapping("/post")
     public ResponseMessage create(@Validated @RequestBody User user) {
