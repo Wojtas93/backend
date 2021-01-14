@@ -37,8 +37,8 @@ public class UserController {
         return userRepository.findById(id).get();
     }
 
-    @GetMapping("/{userName}/{password}")
-    public User get(@PathVariable String userName, @PathVariable String password) {
+    @PostMapping("/login")
+    public User get(@RequestBody String userName, @RequestBody String password) {
         return userRepository.findByUsernameAndPassword(userName, passwordEncoder.encode(password)).get();
     }
 
