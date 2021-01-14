@@ -1,12 +1,13 @@
 package pl.sdacademy.backend.user;
 
+import org.apache.tomcat.jni.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
 
-import java.util.List;
+import java.util.*;
 
 
 @RestController
@@ -38,10 +39,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User get(@RequestBody User user) {
-        String username = user.getUsername();
-        String password = user.getPassword();
-        return userRepository.findByUsernameAndPassword(username, passwordEncoder.encode(password)).get();
+    public UserResponseDto get(@RequestBody UserLogin userlogin) {
+        User user = userRepository.findByUsername(userlogin.getUsername()).get();
+        if (passwordEncoder.matches(userlogin.getPassword(), user.getPassword())) {
+            return new UserResponseDto(Collections.singletonList(user));
+        } else {
+            throw new NoSuchUserException("Wrong password");
+        }
     }
 
 //    @GetMapping("/{userLastName}")

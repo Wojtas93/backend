@@ -7,6 +7,7 @@ public class UserResponseDto {
 
     public UserResponseDto(List<User> users) {
         users.forEach(user ->user.setPassword("******"));
+        users.forEach(user -> user.setRole(""));
         this.users = users;
     }
 
