@@ -38,8 +38,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User get(@RequestBody String userName, @RequestBody String password) {
-        return userRepository.findByUsernameAndPassword(userName, passwordEncoder.encode(password)).get();
+    public User get(@RequestBody User user) {
+        String username = user.getUsername();
+        String password = user.getPassword();
+        return userRepository.findByUsernameAndPassword(username, passwordEncoder.encode(password)).get();
     }
 
 //    @GetMapping("/{userLastName}")
