@@ -68,7 +68,7 @@ public class ReservationController {
     @PostMapping("/post")
     public ResponseMessage create(@RequestBody Reservation reservation) {
         reservationRepository.save(reservation);
-        return new ResponseMessage("User created");
+        return new ResponseMessage("Reservation created");
     }
     @PutMapping("/{id}")
     @ResponseBody
