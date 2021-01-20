@@ -6,6 +6,7 @@ import pl.sdacademy.backend.Errors.ResponseMessage;
 import pl.sdacademy.backend.room.Room;
 import pl.sdacademy.backend.room.RoomController;
 import pl.sdacademy.backend.user.User;
+import pl.sdacademy.backend.user.UserController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ReservationController {
     private final ReservationRepository reservationRepository;
     private RoomController roomController;
+    private UserController userController;
 
     public ReservationController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
@@ -57,6 +59,11 @@ public class ReservationController {
         } else {
             return new ReservationResponseDto(reservationRepository.findByUser_LastNameOrderByStartDate(userLastName));
         }
+    }
+    @GetMapping("/{username}")
+    public ReservationResponseDto getByUsername(@PathVariable String username) {
+        User user = userController.getByLogin(username);
+        return new ReservationResponseDto(reservationRepository.findByUser(user));
     }
     @PostMapping("/post")
     public ResponseMessage create(@RequestBody Reservation reservation) {

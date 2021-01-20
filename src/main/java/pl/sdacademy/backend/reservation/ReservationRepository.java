@@ -15,4 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByUser_LastNameOrderByStartDate(String lastName);
 
     List<Reservation> findByUser_FirstNameAndUser_LastNameOrderByStartDate(String firstName, String lastName);
+
+    List<Reservation> findByUser(User user);
 }
