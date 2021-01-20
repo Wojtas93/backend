@@ -14,4 +14,9 @@ public class AuthorizedMockMvcRequestBuilder {
         return org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(path)
                 .header("Authorization", defaultAuthorizationHeader());
     }
+
+    public static MockHttpServletRequestBuilder authorizePost(String path) {
+        return org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(path)
+                .header("Authorization", defaultAuthorizationHeader());
+    }
 }
