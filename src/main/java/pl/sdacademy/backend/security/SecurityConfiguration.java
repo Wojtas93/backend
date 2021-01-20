@@ -1,4 +1,4 @@
-package pl.sdacademy.backend.user;
+package pl.sdacademy.backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.sdacademy.backend.user.UserService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
