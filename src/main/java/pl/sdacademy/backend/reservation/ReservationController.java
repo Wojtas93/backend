@@ -62,7 +62,7 @@ public class ReservationController {
     }
     @GetMapping("/{username}")
     public ReservationResponseDto getByUsername(@PathVariable String username) {
-        User user = userController.getByLogin(username);
+        User user = userController.get(username);
         return new ReservationResponseDto(reservationRepository.findByUser(user));
     }
     @PostMapping("/post")

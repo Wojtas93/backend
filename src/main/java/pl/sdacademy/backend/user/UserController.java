@@ -48,10 +48,10 @@ public class UserController {
         }
     }
 
-//    @GetMapping("/{userLastName}")
-//    public User get(@PathVariable String userLastName) {
-//        return userRepository.findByLastName(userLastName).get();
-//    }
+    @GetMapping("/{username}")
+    public User get(@PathVariable String username) {
+        return userRepository.findByUsername(username).get();
+    }
 //
 //    @GetMapping("/{userFirstName}/{userLastName}")
 //    public User get(@PathVariable String userFirstName, @PathVariable String userLastName) {
