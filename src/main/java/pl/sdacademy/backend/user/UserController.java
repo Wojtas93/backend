@@ -52,13 +52,14 @@ public class UserController {
     public User get(@PathVariable String username) {
         return userRepository.findByUsername(username).get();
     }
-//
+
 //    @GetMapping("/{userFirstName}/{userLastName}")
 //    public User get(@PathVariable String userFirstName, @PathVariable String userLastName) {
 //        return userRepository.findByFirstNameAndLastName(userFirstName, userLastName).get();
 //    }
 
     @PostMapping("/post")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseMessage create(@Validated @RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -68,17 +69,25 @@ public class UserController {
     @PutMapping("/{id}")
     @ResponseBody
     public ResponseMessage update(@RequestBody User userNew, @PathVariable long id) {
-        User user = userRepository.getOne(id);
-        user.setUsername(userNew.getUsername());
-        user.setPassword(userNew.getPassword());
-        user.setRole(userNew.getRole());
-        user.setFirstName(userNew.getFirstName());
-        user.setLastName(user.getLastName());
-        userRepository.save(user);
-        return new ResponseMessage("User updated");
+        ResponseMessage responseMessage = new ResponseMessage();
+        userRepository.findById(id).ifPresentOrElse(user -> {
+                    user.setUsername(userNew.getUsername());
+                    user.setPassword(userNew.getPassword());
+                    user.setRole(userNew.getRole());
+                    user.setFirstName(userNew.getFirstName());
+                    user.setLastName(user.getLastName());
+                    userRepository.save(user);
+                    responseMessage.setString("User updated");
+                },
+                () -> {
+                    userRepository.save(userNew);
+                    responseMessage.setString("couldn't find this user, user created");
+                });
+        return responseMessage;
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseMessage delete(@PathVariable long id) {
         userRepository.delete(userRepository.getOne(id));
         return new ResponseMessage("user deleted");

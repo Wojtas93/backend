@@ -60,30 +60,42 @@ public class ReservationController {
             return new ReservationResponseDto(reservationRepository.findByUser_LastNameOrderByStartDate(userLastName));
         }
     }
+
     @GetMapping("/{username}")
     public ReservationResponseDto getByUsername(@PathVariable String username) {
         User user = userController.get(username);
         return new ReservationResponseDto(reservationRepository.findByUser(user));
     }
+
     @PostMapping("/post")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseMessage create(@RequestBody Reservation reservation) {
         reservationRepository.save(reservation);
         return new ResponseMessage("Reservation created");
     }
+
     @PutMapping("/{id}")
     @ResponseBody
     public ResponseMessage update(@RequestBody Reservation reservationNew, @PathVariable long id) {
-        Reservation reservation = reservationRepository.findById(id).get();
-        reservation.setRoom(reservationNew.getRoom());
-        reservation.setUser(reservationNew.getUser());
-        reservation.setStartDate(reservationNew.getStartDate());
-        reservation.setEndDate(reservationNew.getEndDate());
-        reservation.setPaid(reservationNew.getPaid());
-        reservationRepository.save(reservation);
-        return new ResponseMessage("Reservation updated");
+        ResponseMessage responseMessage = new ResponseMessage();
+        reservationRepository.findById(id).ifPresentOrElse(reservation -> {
+                    reservation.setRoom(reservationNew.getRoom());
+                    reservation.setUser(reservationNew.getUser());
+                    reservation.setStartDate(reservationNew.getStartDate());
+                    reservation.setEndDate(reservationNew.getEndDate());
+                    reservation.setPaid(reservationNew.getPaid());
+                    reservationRepository.save(reservation);
+                    responseMessage.setString("Reservation updated");
+                },
+                () -> {
+                    reservationRepository.save(reservationNew);
+                    responseMessage.setString("couldn't find this reservation, reservation created");
+                });
+        return responseMessage;
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseMessage delete(@PathVariable long id) {
         reservationRepository.delete(reservationRepository.findById(id).get());
         return new ResponseMessage("Reservation deleted");
