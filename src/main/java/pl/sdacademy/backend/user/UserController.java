@@ -1,13 +1,11 @@
 package pl.sdacademy.backend.user;
 
-import org.apache.tomcat.jni.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.sdacademy.backend.Errors.ResponseMessage;
-
-import java.util.*;
+import java.util.List;
 
 
 @RestController
