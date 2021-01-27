@@ -28,7 +28,7 @@ public class DbInit {
         this.reservationRepository = reservationRepository;
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void onInit() {
         User user1 = new User(
                 "user1",
